@@ -2,7 +2,7 @@
 // take uesr back to choose new pw
 
 import React, { useState, useEffect, Component } from 'react';
-import {Box, Grid, GridItem, Image, Stack, Text, Input, Button, useDisclosure, useBoolean} from '@chakra-ui/react';
+import {Box, Grid, GridItem, Image, Stack, Text, Input, Button, FormControl, FormLabel, useDisclosure, useBoolean} from '@chakra-ui/react';
 
 var selectedImagesArray = [];
 function push_to_img_arry(imgName)
@@ -110,57 +110,65 @@ function Test() {
     const selectedImages = selectedImagesArray.map(image => {
       //console.log('http://127.0.0.1:5000/get_image/'+image);
       var id_num = allImagesArray.indexOf(image);
-      return <PasswordImage id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+      return <PasswordImage id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={256} imgHeight={256}/>
     });
 
-    if (passwordTriedOnce){str = str + ";"}
+    function enterPassword(){
+      setPasswordTriedOnce(true);
+      str = str.slice(0, -2) + ";"; // removing trailing comma
+      console.log(str)
+
+    }
+
+var code = "";
 
 
     function sendSignup(){
-
-      // setSubmittedPassword(true);
-      //setGotPasswordCorrect(true);
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: { username: 'username', radial_distance: radii['R'][rIndex], password: str  }
-        };
-        const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
-          .then(response => {
-
-            console.log(response.json())
-
-            if (response.status == 201)
-            {
-              setGotPasswordCorrect(true);
-            }
-
-            else
-            {
-
-              setNumberOfAttempts(numberOfAttempts + 1);
-              alert(response)
-              setPasswordTriedOnce(false);
-              setGotPasswordCorrect(false);
-              str = "";
-              if(numberOfAttempts == 3)
-              {
-                alert('3 tries');
+      console.log(str.slice(0, -2))
+      const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: username, radial_distance: radii['R'][rIndex], password: str.slice(0, -2) })
+      };
+      const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
+            .then(response => {
+              if (response.status == 400){
+                setResponseCode(response.status)
+                code = response.status;
               }
-              //str = str.substring(0, str.indexOf(';'));
-            }
-          })
 
-    console.log(response);
+              return response.json()})
+            .then(data => {
+              if (code == 201)
+              {
+                setGotPasswordCorrect(true);
+              }
+              else
+              {
+                alert(data + "\nEnter a new password")
+                setNumberOfAttempts(numberOfAttempts + 1);
+                //alert(response.json())
+                setPasswordTriedOnce(false);
+                setGotPasswordCorrect(false);
+                str = "";
+                if(numberOfAttempts == 3)
+                {
+                  alert('3 tries');
+                }
+                //str = str.substring(0, str.indexOf(';'));
+              }
+
+            });
 
     }
+
 
     const [username, setUsername] = useState("");
     //const handleChange = (event) => setUsername(event.target.username);
 
     function submitImages()
     {
+      (username == "") ? alert("Input a username") :
       (selectedImagesArray.length < 2) ? alert("Not enough images selected") : setSubmittedImages(true);
       // console.log(username);
     }
@@ -205,48 +213,59 @@ function Test() {
       // selectedImagesArray = [];
       // str = "";
 
+      //<Input w={200} onChange={event => setUsername(event.target.username)} placeholder='Username' />
 
     return (
 
       !start ?
-      <div>
-        Welcome to our final project
-        <button onClick={() => setStart(true)}>Start</button>
-        <button onClick={() => ping()}>ping</button>
+      <Stack>
+        <Text> Welcome to our final project! </Text>
+        <Text> Things to note: </Text>
+        <Text> - Follow the steps to choose images and create passwords based on those images </Text>
+        <Text> - You will be asked to choose 2 images and choose points on those images as a password.</Text>
+        <Text> Once you replicate that password, you will be asked to repeat the process with another set of 2 images.</Text>
+        <Text>That's it!</Text>
+        <Text> But be careful, if you can't replicate your password you will be asked to create a new password several times until
+        you either get it right or run out of attempts. </Text>
+        <Text> Participation in this study is voluntary. By clicking start below you are agreeing to be part of our study. </Text>
+        <Button colorScheme='blue' size='md' onClick={() => setStart(true)}>Start</Button>
+      </Stack>
 
-      </div>
       :
       !submittedImages ?
       <div className="Pw">
         This is the pw page!
         <Stack>
-          <Input w={200} onChange={event => setUsername(event.target.username)} placeholder='Username' />
+          <FormControl id='username' isRequired>
+            <FormLabel>Username</FormLabel>
+            <Input onChange={event => setUsername(event.target.value)} w={200} h={10} placeholder='Username' />
+          </FormControl>
         </Stack>
           <Stack m={100} direction={['column', 'row']} spacing='24px'>
           {images}
           </Stack>
           <button onClick={() => submitImages()}>Enter</button>
       </div> :
-      (!passwordTriedOnce) ?
+      !passwordTriedOnce ?
       <div className="Pw">
         Select points on the images, rememeber the order of points that you selected!
         <Stack>
-          <Text mb='8px'>Value: {username}</Text>
-          <Button w={100}> Enter </Button>
-        </Stack>
+        <FormControl id='username' isRequired>
+          <FormLabel>Username</FormLabel>
+          <Input onChange={event => setUsername(event.target.value)} w={200} h={10} placeholder='Username' />
+        </FormControl>        </Stack>
         <Stack m={100} direction={['column', 'row']} spacing='24px'>
         {selectedImages}
         </Stack>
 
-        <button onClick={() => setPasswordTriedOnce(true)}>Enter</button>
+        <button onClick={() => enterPassword()}>Enter</button>
       </div>
       :
       (numberOfAttempts < 3 && !gotPasswordCorrect) ?
       <div className="Pw">
-        Reenter your password, you have 3 tries
+        Reenter your password
         <Stack>
-          <Input w={200} placeholder='Username' />
-          <Button w={100}> Enter </Button>
+        <Text mb='8px'>Username: {username}</Text>
         </Stack>
         <Stack m={100} direction={['column', 'row']} spacing='24px'>
         {selectedImages}
