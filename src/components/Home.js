@@ -2,8 +2,7 @@
 // take uesr back to choose new pw
 
 import React, { useState, useEffect, Component } from 'react';
-import {Link as ReachLink} from 'react-router-dom';
-import {Box, Flex, Grid, GridItem, Heading, Image, Stack, Text, Input, Button, Fade, Link, useDisclosure, useBoolean} from '@chakra-ui/react';
+import {Box, Grid, GridItem, Image, Stack, Text, Input, Button, useDisclosure, useBoolean} from '@chakra-ui/react';
 
 var selectedImagesArray = [];
 function push_to_img_arry(imgName)
@@ -72,6 +71,10 @@ function Test() {
 
   const [allImagesArray, setAllImagesArray] = useState([]);
   const [radii, setRadii] = useState([]);
+  const [rIndex, setRIndex] = useState(0);
+  const [start, setStart] = useState(false);
+
+
   //const [submittedImages, setSubmittedImages] = useBoolean(false)
   //const [passwordTriedOnce, setPasswordTriedOnce] = useBoolean(false)
   const [submittedImages, setSubmittedImages] = useState(false)
@@ -79,11 +82,11 @@ function Test() {
   const [gotPasswordCorrect, setGotPasswordCorrect] = useState(false)
   const [submittedPassword, setSubmittedPassword] = useState(false)
   const [numberOfAttempts, setNumberOfAttempts] = useState(0);
+  const [responseCode, setResponseCode] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
   const [numberOfPasswords, setNumberOfPasswords] = useState(0);
-  var rArray = [100, 2];
-  const [rIndex, setRIndex] = useState(0);
-  const [currentR, setCurrentR] = useState(rArray[rIndex]);
-  console.log(rArray[0]);
+  const [response, setResponse] = useState("")
+  // console.log(rArray[0]);
   useEffect(() => {
     const data = fetch('http://127.0.0.1:5000/get_password_images')
     .then(response => response.json()).then(data => setAllImagesArray(data))
@@ -94,7 +97,13 @@ function Test() {
     const images = allImagesArray.map(image => {
       //console.log('http://127.0.0.1:5000/get_image/'+image);
       var id_num = allImagesArray.indexOf(image);
-      return <HomepageListItem id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+      return (
+        <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)'>
+        <GridItem rowSpan={1} colSpan={1}>
+        <HomepageListItem id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+        </GridItem>
+        </Grid>
+      )
     });
 
 
@@ -108,42 +117,56 @@ function Test() {
 
 
     function sendSignup(){
+
+      // setSubmittedPassword(true);
       //setGotPasswordCorrect(true);
-      setSubmittedPassword(true);
 
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: { username: 'username', radial_distance: radii['R'][rIndex], password: str  }
+        };
+        const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
+          .then(response => {
 
-    if (submittedPassword)
+            console.log(response.json())
+
+            if (response.status == 201)
+            {
+              setGotPasswordCorrect(true);
+            }
+
+            else
+            {
+
+              setNumberOfAttempts(numberOfAttempts + 1);
+              alert(response)
+              setPasswordTriedOnce(false);
+              setGotPasswordCorrect(false);
+              str = "";
+              if(numberOfAttempts == 3)
+              {
+                alert('3 tries');
+              }
+              //str = str.substring(0, str.indexOf(';'));
+            }
+          })
+
+    console.log(response);
+
+    }
+
+    const [username, setUsername] = useState("");
+    //const handleChange = (event) => setUsername(event.target.username);
+
+    function submitImages()
     {
-      const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'signup request' },
-          body: JSON.stringify({ username: 'React POST Request Example', radial_distance: '5', password: str  })
-      };
-      const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
-          .then(response => response.json())
-
-      setNumberOfAttempts(numberOfAttempts + 1);
-      if(numberOfAttempts == 3)
-      {
-        console.log('3 tries');
-      }
-
-      //setGotPasswordCorrect(true);
-
-          //.then(data => this.setState({ postId: data.id }));
-
-      //const data = fetch('http://127.0.0.1:5000/signup')
-      //.then(response => response.json()).then(data => setAllImagesArray(data))
-      // Send post request with signup info
+      (selectedImagesArray.length < 2) ? alert("Not enough images selected") : setSubmittedImages(true);
+      // console.log(username);
     }
-    console.log(numberOfAttempts);
-
-    }
-
-
 
     function reset(){
-      setNumberOfPasswords(numberOfPasswords + 1);
+      //setNumberOfPasswords(numberOfPasswords + 1);
       setSubmittedImages(false);
       setPasswordTriedOnce(false);
       setGotPasswordCorrect(false);
@@ -151,15 +174,28 @@ function Test() {
       str = "";
       selectedImagesArray = [];
 
-      if (numberOfPasswords == 2)
+      setRIndex(rIndex + 1);
+      if (rIndex == 1)
       {
-        setRIndex(rIndex + 1);
-        setCurrentR(rArray[rIndex]);
+        alert("End of our study. Thank you for participating!")
       }
-      // if (rIndex == 1)
       // {
       //
       // }
+    }
+
+    function chooseNewPw()
+    {
+      setNumberOfPasswords(numberOfPasswords + 1);
+      setPasswordTriedOnce(true);
+      str = ""
+
+    }
+
+    function ping(){
+      const data = fetch('http://127.0.0.1:5000/ping')
+          .then(response => console.log(response)) //setResponseCode(response.status)
+      //console.log(responseCode);
     }
 
       // setSubmittedImages.off;
@@ -172,22 +208,30 @@ function Test() {
 
     return (
 
+      !start ?
+      <div>
+        Welcome to our final project
+        <button onClick={() => setStart(true)}>Start</button>
+        <button onClick={() => ping()}>ping</button>
+
+      </div>
+      :
       !submittedImages ?
       <div className="Pw">
         This is the pw page!
         <Stack>
-          <Input w={200} placeholder='Username' />
+          <Input w={200} onChange={event => setUsername(event.target.username)} placeholder='Username' />
         </Stack>
           <Stack m={100} direction={['column', 'row']} spacing='24px'>
           {images}
           </Stack>
-          <button onClick={() => setSubmittedImages(true)}>Enter</button>
+          <button onClick={() => submitImages()}>Enter</button>
       </div> :
-      !passwordTriedOnce ?
+      (!passwordTriedOnce) ?
       <div className="Pw">
         Select points on the images, rememeber the order of points that you selected!
         <Stack>
-          <Input w={200} placeholder='Username' />
+          <Text mb='8px'>Value: {username}</Text>
           <Button w={100}> Enter </Button>
         </Stack>
         <Stack m={100} direction={['column', 'row']} spacing='24px'>
@@ -225,6 +269,8 @@ function Test() {
         </Button>
       </div>
 
+
+
     )
 }
 export default Test;
@@ -237,7 +283,8 @@ const HomepageListItem = ({ id, imgName, imgSrc, imgWidth, imgHeight}: HomepageL
   function changeState(){
 
     //If (selectedImagesArray.length == 2 )
-    if (selected && inArray){
+    if (selected && inArray)
+    {
       setSelected(false);
       remove_from_img_arry(imgName);
       setInArray(false);
@@ -253,17 +300,13 @@ const HomepageListItem = ({ id, imgName, imgSrc, imgWidth, imgHeight}: HomepageL
 
     else if (selectedImagesArray.length == 2 && !inArray)
     {
-      console.log("max 2 images"); // display this
+      alert("Select maximum 2 images");
     }
-
-
-
   }
-
     return (
           <Box>
                 <Image id={id} src={imgSrc} h={imgHeight} w={imgWidth} marginLeft='auto' m={10} marginRight={['auto', 'auto', 0, 0]}
-                border={selected ? '3px solid black' : '#A52A2A'} onClick={() => changeState()}/>
+                border={selected ? '3px solid black' : ''} onClick={() => changeState()}/>
           </Box>
     );
 }
