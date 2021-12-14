@@ -1,159 +1,321 @@
-import '../App.css';
-import React, { useState } from 'react';
-import dog1 from '../images/dog.jpeg'; // Tell webpack this JS file uses this image
-import dog2 from '../images/dog2.jpeg';
-import mountains1 from '../images/mountains1.jpeg';
-import buildings1 from '../images/buildings1.jpeg';
-import { Link } from 'react-router-dom';
+// To do: limit number of images, minimum number of points select, highlight points when selected/show pw,
+// take uesr back to choose new pw
 
-function Home() {
-  const [count, setCount] = useState(0);
-  const [name, setName] = useState("");
+import React, { useState, useEffect, Component } from 'react';
+import {Box, Grid, GridItem, Image, Stack, Text, Input, Button, useDisclosure, useBoolean} from '@chakra-ui/react';
 
-  const all_images = ["dog1", "dog2", "buildings1", "mountains1"];
-  const [selectedImages, setselectedImages] = useState([])
-
-  const images = all_images.map(image => {
-     return <img key={image} src={image} className="img-responsive" />
-  });
-
-  const handleSubmit = (event) => {
-
-  event.preventDefault();
-  alert('The name you entered was: '+name) // send to backend
-  //this.setRedirect({redirect: true});
-
-  }
-
-  function FindPosition(oElement)
+var selectedImagesArray = [];
+function push_to_img_arry(imgName)
+{
+  if (!selectedImagesArray.includes(imgName))
   {
-    if(typeof( oElement.offsetParent ) != "undefined")
-    {
-      for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
-      {
-        posX += oElement.offsetLeft;
-        posY += oElement.offsetTop;
-      }
-        return [ posX, posY ];
-      }
-      else
-      {
-        return [ oElement.x, oElement.y ];
-      }
+    selectedImagesArray.push(imgName);
   }
-
-  const [style1, setStyle1] = useState("dog1");
-  const [style2, setStyle2] = useState("dog2");
-  const [style3, setStyle3] = useState("mountains1");
-  const [style4, setStyle4] = useState("buildings1");
-
-  function changeStyle1(style_unselected, style_selected)
-  {
-
-    if ({style1}.style1 == style_unselected)
-    {
-      setselectedImages(selectedImages.concat(style_unselected));
-      setStyle1(style_selected);
-    }
-    else
-    {
-      //setselectedImages(selectedImages.filter(selectedImages => selectedImages !== style_selected))
-      selectedImages.pop(style_unselected);
-      setStyle1(style_unselected);
-
-    }
-    //({style}.style == "dog1") ? setStyle("dog1_selected") : setStyle("dog1")
-    console.log(selectedImages)
-
-  }
-
-  function changeStyle2(style_unselected, style_selected)
-  {
-
-    if ({style2}.style2 == style_unselected)
-    {
-      setStyle2(style_selected);
-      setselectedImages(selectedImages.concat(style_unselected));
-    }
-    else
-    {
-      //setselectedImages(selectedImages.filter(selectedImages => selectedImages !== style_selected))
-      selectedImages.pop(style_unselected);
-      setStyle2(style_unselected);
-    }
-    //({style}.style == "dog1") ? setStyle("dog1_selected") : setStyle("dog1")
-    console.log(selectedImages)
-
-  }
-
-
-  function saveSelectedImages()
-  {
-    //send post request with selected images
-  }
-
-  function GetCoordinates(e,id)
-  {
-    var myImg = document.getElementById(id);
-    var PosX = 0;
-    var PosY = 0;
-    var ImgPos;
-    ImgPos = FindPosition(myImg);
-    if (!e) var e = window.event;
-    if (e.pageX || e.pageY)
-    {
-      PosX = e.pageX;
-      PosY = e.pageY;
-    }
-    else if (e.clientX || e.clientY)
-      {
-        PosX = e.clientX + document.body.scrollLeft
-          + document.documentElement.scrollLeft;
-        PosY = e.clientY + document.body.scrollTop
-          + document.documentElement.scrollTop;
-      }
-    PosX = PosX - ImgPos[0];
-    PosY = PosY - ImgPos[1];
-    alert(PosX)
-    alert(PosY)
-    //document.getElementById("x").innerHTML = PosX;
-    //document.getElementById("y").innerHTML = PosY;
-  }
-  // if (this.props.redirect) {
-  //     return <Navigate push to="/contact" />;
-  //   }
-  // Import result is the URL of your image
-  return (
-    //<img src={logo} alt="Logo" />;
-    <div>
-    Signup Page!
-    <img className={style1} id="myImgId2" src={dog1} alt="Logo" width="256" height="256" onClick={()=>changeStyle1("dog1", "dog1_selected")}/>
-    <img class={style2} id="myImgId" src={dog2} alt="Logo" width="256" height="256" onClick={()=>changeStyle2("dog2","dog2_selected")}/>
-    <img class={style3} id="myImgId3" src={mountains1} alt="Logo" width="256" height="256" onClick={()=>GetCoordinates(this,"myImgId3")}/>
-    <img class={style4} id="myImgId4" src={buildings1} alt="Logo" width="256" height="256" onClick={()=>GetCoordinates(this,"myImgId4")}/>
-
-
-      <form onSubmit={handleSubmit}>
-        <label class="label">Username:
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input type="submit" />
-        </label>
-      </form>
-      <label class="text">Select 2 images below and click enter</label>
-      <button class="enter" onClick={saveSelectedImages}>Enter</button>
-
-      <Link
-      to={{
-        pathname: "/login",
-        state: selectedImages // your data array of objects
-      }}>login</Link>
-
-    </div>
-  );
+  //console.log(selectedImagesArray);
 }
 
-export default Home;
+function remove_from_img_arry(imgName)
+{
+  const index = selectedImagesArray.indexOf(imgName);
+  if (index > -1) {
+    selectedImagesArray.splice(index, 1);
+  }
+  //console.log(selectedImagesArray);
+}
+var str = "";
+function FindPosition(oElement)
+{
+  if(typeof( oElement.offsetParent ) != "undefined")
+  {
+    for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+    {
+      posX += oElement.offsetLeft;
+      posY += oElement.offsetTop;
+    }
+      return [ posX, posY ];
+    }
+    else
+    {
+      return [ oElement.x, oElement.y ];
+    }
+}
+
+function GetCoordinates(e,id,imgName)
+{
+  var myImg = document.getElementById(id);
+  var PosX = 0;
+  var PosY = 0;
+  var ImgPos;
+  ImgPos = FindPosition(myImg);
+  if (!e) var e = window.event;
+  if (e.pageX || e.pageY)
+  {
+    PosX = e.pageX;
+    PosY = e.pageY;
+  }
+  else if (e.clientX || e.clientY)
+    {
+      PosX = e.clientX + document.body.scrollLeft
+        + document.documentElement.scrollLeft;
+      PosY = e.clientY + document.body.scrollTop
+        + document.documentElement.scrollTop;
+    }
+  PosX = PosX - ImgPos[0];
+  PosY = PosY - ImgPos[1];
+
+  str = str + imgName + " " + PosX + " " + PosY + ", ";
+  console.log(str);
+}
+
+function Test() {
+
+  const [allImagesArray, setAllImagesArray] = useState([]);
+  const [radii, setRadii] = useState([]);
+  const [rIndex, setRIndex] = useState(0);
+  const [start, setStart] = useState(false);
+
+
+  //const [submittedImages, setSubmittedImages] = useBoolean(false)
+  //const [passwordTriedOnce, setPasswordTriedOnce] = useBoolean(false)
+  const [submittedImages, setSubmittedImages] = useState(false)
+  const [passwordTriedOnce, setPasswordTriedOnce] = useState(false)
+  const [gotPasswordCorrect, setGotPasswordCorrect] = useState(false)
+  const [submittedPassword, setSubmittedPassword] = useState(false)
+  const [numberOfAttempts, setNumberOfAttempts] = useState(0);
+  const [responseCode, setResponseCode] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
+  const [numberOfPasswords, setNumberOfPasswords] = useState(0);
+  const [response, setResponse] = useState("")
+  // console.log(rArray[0]);
+  useEffect(() => {
+    const data = fetch('http://127.0.0.1:5000/get_password_images')
+    .then(response => response.json()).then(data => setAllImagesArray(data))
+    const radii = fetch('http://127.0.0.1:5000/getR')
+    .then(response => response.json()).then(radii => setRadii(radii))
+    }, []);
+
+    const images = allImagesArray.map(image => {
+      //console.log('http://127.0.0.1:5000/get_image/'+image);
+      var id_num = allImagesArray.indexOf(image);
+      return (
+        <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)'>
+        <GridItem rowSpan={1} colSpan={1}>
+        <HomepageListItem id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+        </GridItem>
+        </Grid>
+      )
+    });
+
+
+    const selectedImages = selectedImagesArray.map(image => {
+      //console.log('http://127.0.0.1:5000/get_image/'+image);
+      var id_num = allImagesArray.indexOf(image);
+      return <PasswordImage id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+    });
+
+    if (passwordTriedOnce){str = str + ";"}
+
+
+    function sendSignup(){
+
+      // setSubmittedPassword(true);
+      //setGotPasswordCorrect(true);
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: { username: 'username', radial_distance: radii['R'][rIndex], password: str  }
+        };
+        const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
+          .then(response => {
+
+            console.log(response.json())
+
+            if (response.status == 201)
+            {
+              setGotPasswordCorrect(true);
+            }
+
+            else
+            {
+
+              setNumberOfAttempts(numberOfAttempts + 1);
+              alert(response)
+              setPasswordTriedOnce(false);
+              setGotPasswordCorrect(false);
+              str = "";
+              if(numberOfAttempts == 3)
+              {
+                alert('3 tries');
+              }
+              //str = str.substring(0, str.indexOf(';'));
+            }
+          })
+
+    console.log(response);
+
+    }
+
+    const [username, setUsername] = useState("");
+    //const handleChange = (event) => setUsername(event.target.username);
+
+    function submitImages()
+    {
+      (selectedImagesArray.length < 2) ? alert("Not enough images selected") : setSubmittedImages(true);
+      // console.log(username);
+    }
+
+    function reset(){
+      //setNumberOfPasswords(numberOfPasswords + 1);
+      setSubmittedImages(false);
+      setPasswordTriedOnce(false);
+      setGotPasswordCorrect(false);
+      setNumberOfAttempts(0);
+      str = "";
+      selectedImagesArray = [];
+
+      setRIndex(rIndex + 1);
+      if (rIndex == 1)
+      {
+        alert("End of our study. Thank you for participating!")
+      }
+      // {
+      //
+      // }
+    }
+
+    function chooseNewPw()
+    {
+      setNumberOfPasswords(numberOfPasswords + 1);
+      setPasswordTriedOnce(true);
+      str = ""
+
+    }
+
+    function ping(){
+      const data = fetch('http://127.0.0.1:5000/ping')
+          .then(response => console.log(response)) //setResponseCode(response.status)
+      //console.log(responseCode);
+    }
+
+      // setSubmittedImages.off;
+
+      // setPasswordTriedOnce(false);
+      // setGotPasswordCorrect(false);
+      // selectedImagesArray = [];
+      // str = "";
+
+
+    return (
+
+      !start ?
+      <div>
+        Welcome to our final project
+        <button onClick={() => setStart(true)}>Start</button>
+        <button onClick={() => ping()}>ping</button>
+
+      </div>
+      :
+      !submittedImages ?
+      <div className="Pw">
+        This is the pw page!
+        <Stack>
+          <Input w={200} onChange={event => setUsername(event.target.username)} placeholder='Username' />
+        </Stack>
+          <Stack m={100} direction={['column', 'row']} spacing='24px'>
+          {images}
+          </Stack>
+          <button onClick={() => submitImages()}>Enter</button>
+      </div> :
+      (!passwordTriedOnce) ?
+      <div className="Pw">
+        Select points on the images, rememeber the order of points that you selected!
+        <Stack>
+          <Text mb='8px'>Value: {username}</Text>
+          <Button w={100}> Enter </Button>
+        </Stack>
+        <Stack m={100} direction={['column', 'row']} spacing='24px'>
+        {selectedImages}
+        </Stack>
+
+        <button onClick={() => setPasswordTriedOnce(true)}>Enter</button>
+      </div>
+      :
+      (numberOfAttempts < 3 && !gotPasswordCorrect) ?
+      <div className="Pw">
+        Reenter your password, you have 3 tries
+        <Stack>
+          <Input w={200} placeholder='Username' />
+          <Button w={100}> Enter </Button>
+        </Stack>
+        <Stack m={100} direction={['column', 'row']} spacing='24px'>
+        {selectedImages}
+        </Stack>
+      <button onClick={() => sendSignup()}>Submit</button>
+      </div>
+      :
+      gotPasswordCorrect ?
+      <div className="Pw">
+        Password correct, signup complete, choose new images
+        <Button onClick={() => reset()}>
+          Click here
+        </Button>
+      </div>
+      :
+      <div className="Pw">
+        Password incorrect, choose new images
+        <Button onClick={() => reset()}>
+          Click here
+        </Button>
+      </div>
+
+
+
+    )
+}
+export default Test;
+
+const HomepageListItem = ({ id, imgName, imgSrc, imgWidth, imgHeight}: HomepageListItemProps) => {
+  //const [selected, setSelected] = useBoolean();
+  const [selected, setSelected] = useState(false);
+  const [inArray, setInArray] = useState(false);
+
+  function changeState(){
+
+    //If (selectedImagesArray.length == 2 )
+    if (selected && inArray)
+    {
+      setSelected(false);
+      remove_from_img_arry(imgName);
+      setInArray(false);
+    }
+
+    // If room in array, and not already in array
+    else if (selectedImagesArray.length < 2 && !inArray)
+    {
+      setSelected(true);
+      push_to_img_arry(imgName);
+      setInArray(true);
+    }
+
+    else if (selectedImagesArray.length == 2 && !inArray)
+    {
+      alert("Select maximum 2 images");
+    }
+  }
+    return (
+          <Box>
+                <Image id={id} src={imgSrc} h={imgHeight} w={imgWidth} marginLeft='auto' m={10} marginRight={['auto', 'auto', 0, 0]}
+                border={selected ? '3px solid black' : ''} onClick={() => changeState()}/>
+          </Box>
+    );
+}
+
+const PasswordImage = ({ id, imgName, imgSrc, imgWidth, imgHeight}: PasswordImageProps) => {
+    return (
+          <Box>
+                <Image id={id} imgName={imgName} src={imgSrc} h={imgHeight} w={imgWidth} marginLeft='auto' m={100} marginRight={['auto', 'auto', 0, 0]}
+                onClick={()=>GetCoordinates(this, id, imgName)}/>
+          </Box>
+    );
+}

@@ -45,46 +45,6 @@
   /*border: 3px solid #73AD21;*/
 }
 
-.dog1_selected {
-  position: fixed;
-  bottom: 100px;
-  right: 50px;
-  width: 300px;
-  border: 3px solid #73AD21;
-}
-
-.dog2 {
-  position: fixed;
-  bottom: 100px;
-  left: 50px;
-  width: 300px;
-  /*border: 3px solid #73AD21;*/
-}
-
-.dog2_selected {
-  position: fixed;
-  bottom: 100px;
-  left: 50px;
-  width: 300px;
-  border: 3px solid #73AD21;
-}
-
-.mountains1 {
-  position: fixed;
-  bottom: 100px;
-  left: 400px;
-  width: 300px;
-  /*border: 3px solid #73AD21;*/
-}
-
-.buildings1 {
-  position: fixed;
-  bottom: 100px;
-  right: 400px;
-  width: 300px;
-  /*border: 3px solid #73AD21;*/
-}
-
 .label{
   position: fixed;
   top: 100px;
@@ -106,4 +66,8 @@
   left: 350px;
   color: black;
   font-size: 15px;
+}
+
+.hidden {
+  visibility: hidden;
 }
