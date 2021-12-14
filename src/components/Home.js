@@ -39,7 +39,8 @@ function FindPosition(oElement)
       return [ oElement.x, oElement.y ];
     }
 }
-
+var xCoordinate = 0;
+var yCoordinate = 0;
 function GetCoordinates(e,id,imgName)
 {
   var myImg = document.getElementById(id);
@@ -62,6 +63,8 @@ function GetCoordinates(e,id,imgName)
     }
   PosX = PosX - ImgPos[0];
   PosY = PosY - ImgPos[1];
+  xCoordinate = PosX;
+  yCoordinate = PosY;
 
   str = str + imgName + " " + PosX + " " + PosY + ", ";
   console.log(str);
@@ -73,7 +76,6 @@ function Test() {
   const [radii, setRadii] = useState([]);
   const [rIndex, setRIndex] = useState(0);
   const [start, setStart] = useState(false);
-
 
   //const [submittedImages, setSubmittedImages] = useBoolean(false)
   //const [passwordTriedOnce, setPasswordTriedOnce] = useBoolean(false)
@@ -114,6 +116,7 @@ function Test() {
     });
 
     function enterPassword(){
+      (username == "") ? alert("Input a username") :
       setPasswordTriedOnce(true);
       str = str.slice(0, -2) + ";"; // removing trailing comma
       console.log(str)
@@ -124,7 +127,8 @@ var code = "";
 
 
     function sendSignup(){
-      console.log(str.slice(0, -2))
+
+      console.log(radii['R'][rIndex])
       const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -132,15 +136,16 @@ var code = "";
       };
       const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
             .then(response => {
-              if (response.status == 400){
+              //if (response.status == 400){
                 setResponseCode(response.status)
                 code = response.status;
-              }
+              //}
 
               return response.json()})
             .then(data => {
               if (code == 201)
               {
+                alert(data + "\nMake one more password!")
                 setGotPasswordCorrect(true);
               }
               else
@@ -168,7 +173,6 @@ var code = "";
 
     function submitImages()
     {
-      (username == "") ? alert("Input a username") :
       (selectedImagesArray.length < 2) ? alert("Not enough images selected") : setSubmittedImages(true);
       // console.log(username);
     }
@@ -238,7 +242,6 @@ var code = "";
         <Stack>
           <FormControl id='username' isRequired>
             <FormLabel>Username</FormLabel>
-            <Input onChange={event => setUsername(event.target.value)} w={200} h={10} placeholder='Username' />
           </FormControl>
         </Stack>
           <Stack m={100} direction={['column', 'row']} spacing='24px'>
@@ -250,11 +253,12 @@ var code = "";
       <div className="Pw">
         Select points on the images, rememeber the order of points that you selected!
         <Stack>
+        <Text color="red">Coordinates: {xCoordinate} , {yCoordinate} </Text>
         <FormControl id='username' isRequired>
           <FormLabel>Username</FormLabel>
-          <Input onChange={event => setUsername(event.target.value)} w={200} h={10} placeholder='Username' />
+          <Input onChange={event => setUsername(event.target.value)} w={200} h={10} placeholder={username} />
         </FormControl>        </Stack>
-        <Stack m={100} direction={['column', 'row']} spacing='24px'>
+        <Stack m={0} direction={['column', 'row']} spacing='24px'>
         {selectedImages}
         </Stack>
 
@@ -322,6 +326,8 @@ const HomepageListItem = ({ id, imgName, imgSrc, imgWidth, imgHeight}: HomepageL
       alert("Select maximum 2 images");
     }
   }
+
+
     return (
           <Box>
                 <Image id={id} src={imgSrc} h={imgHeight} w={imgWidth} marginLeft='auto' m={10} marginRight={['auto', 'auto', 0, 0]}
@@ -331,10 +337,11 @@ const HomepageListItem = ({ id, imgName, imgSrc, imgWidth, imgHeight}: HomepageL
 }
 
 const PasswordImage = ({ id, imgName, imgSrc, imgWidth, imgHeight}: PasswordImageProps) => {
+
     return (
           <Box>
                 <Image id={id} imgName={imgName} src={imgSrc} h={imgHeight} w={imgWidth} marginLeft='auto' m={100} marginRight={['auto', 'auto', 0, 0]}
-                onClick={()=>GetCoordinates(this, id, imgName)}/>
+                onClick={()=>{GetCoordinates(this, id, imgName)}}/>
           </Box>
     );
 }
