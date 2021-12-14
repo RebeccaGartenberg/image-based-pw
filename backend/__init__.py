@@ -1,5 +1,6 @@
 from .models import users_database
 from .login import login_manager
+from flask_cors import CORS
 from flask import Flask
 import json
 import os
@@ -16,6 +17,7 @@ CONFIG_FILE = "config.json"
 """
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     config = None
     with open(os.path.join(PROJECT_DIR, CONFIG_FILE)) as f:
