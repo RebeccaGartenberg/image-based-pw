@@ -108,7 +108,7 @@ def signup():
     for entry, string in enumerate(password):
         points = string.split(",")
         if len(points) < MINIMUM_POINTS:
-            return jsonify("Not enough points used"), 400
+            return jsonify(F"Not enough points used, need {MINIMUM_POINTS} points"), 400
 
         password[entry] = [tuple(point.split()) for point in points]
         if not all(len(point) == 3 for point in password[entry]):
