@@ -138,7 +138,7 @@ def signup():
     if radial_distance_attempts:
         radial_distance_attempts.attempts += 1
     else:
-        radial_distance_attempts = Attempts(id=new_id, r=radial_distance, attempts=1, successes=0)
+        radial_distance_attempts = Attempts(id=user.id, r=radial_distance, attempts=1, successes=0)
         users_database.session.add(radial_distance_attempts)
 
     midpoint_password = ""
