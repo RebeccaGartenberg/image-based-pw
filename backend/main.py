@@ -98,7 +98,7 @@ def signup():
     if user:
         radial_distance_password = Passwords.query.filter_by(id=user.id, r=radial_distance).first()
         if radial_distance_password:
-            return jsonify("User already has a password for this radial distance"), 400
+            return jsonify("User already has a password for this radial distance, pick a new username"), 400
 
     # Password formatting
     password = password.split(";")
