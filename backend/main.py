@@ -59,9 +59,9 @@ def get_radial_distances():
     Signup password should be one continuous string. Each attempt (should be 2) should be semi-colon delimited. Within
     each attempt, each sequence of password 'points' should be the name of the image file, followed by a tuple of x, y
     coordinates delimited with a comma. There should be N signup strings, one for each of the R being tested.
-    
+
     Total signup post request:
-    
+
     {
         "username": <username>,
         "radial_distance": <radial_distance_user_wants_to_use>,
@@ -70,6 +70,8 @@ def get_radial_distances():
 
 
 """
+
+
 @main.route("/signup", methods=["POST"])
 def signup():
     body = request.json
@@ -113,7 +115,8 @@ def signup():
             return jsonify("Incorrect format"), 400
 
         try:
-            password[entry] = [(check_existence(secure_filename(point[0])), int(point[1]), int(point[2])) for point in password[entry]]
+            password[entry] = [(check_existence(secure_filename(point[0])), int(point[1]), int(point[2])) for point in
+                               password[entry]]
             [check_bounds(*point) for point in password[entry]]
         except ValueError:
             return jsonify("Incorrect format"), 400
@@ -122,11 +125,7 @@ def signup():
         except IndexError:
             return jsonify("Image coordinates out of bounds"), 400
 
-    radial_distance_attempts = None
-    if user:
-        radial_distance_attempts = Attempts.query.filter_by(id=user.id, r=radial_distance).first()
-        radial_distance_attempts.attempts += 1
-    else:
+    if not user:
         current_ids = users_database.session.query(User.id).all()
         new_id = uuid.uuid4().hex
         while new_id in current_ids:
@@ -134,6 +133,11 @@ def signup():
 
         user = User(id=new_id, username=username)
         users_database.session.add(user)
+
+    radial_distance_attempts = Attempts.query.filter_by(id=user.id, r=radial_distance).first()
+    if radial_distance_attempts:
+        radial_distance_attempts.attempts += 1
+    else:
         radial_distance_attempts = Attempts(id=new_id, r=radial_distance, attempts=1, successes=0)
         users_database.session.add(radial_distance_attempts)
 
@@ -186,6 +190,8 @@ def signup():
 
 
 """
+
+
 @main.route("/login", methods=["POST"])
 def login():
     body = request.json
@@ -245,7 +251,8 @@ def login():
             users_database.session.commit()
             return jsonify("Incorrect Password"), 401
 
-        if get_radial_distance((provided_point[1], provided_point[2]), (int(password_point[1]), int(password_point[2]))) > radial_distance:
+        if get_radial_distance((provided_point[1], provided_point[2]),
+                               (int(password_point[1]), int(password_point[2]))) > radial_distance:
             users_database.session.commit()
             return jsonify("Incorrect Password"), 401
 
