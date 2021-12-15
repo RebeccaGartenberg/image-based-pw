@@ -15,7 +15,7 @@ aws ec2 terminate-instances ${PREAMBLE} --instance-ids ${INSTANCES_IDS} | tee -a
 sleep 30
 
 echo "Delete Key pair" | tee -a ${LOGFILE}
-aws ec2 delete-key-pair --key-name ${KEY_NAME}
+aws ec2 ${PREAMBLE} delete-key-pair --key-name ${KEY_NAME}
 rm ${KEY_FILE}
 
 # remove route table association
@@ -40,7 +40,7 @@ sleep 10
 
 # delete IGW
 echo "Delete IGW" | tee -a ${LOGFILE}
-aws ec2 delete-internet-gateway --internet-gateway-id ${IGW_ID} | tee -a ${LOGFILE}
+aws ec2 delete-internet-gateway ${PREAMBLE} --internet-gateway-id ${IGW_ID} | tee -a ${LOGFILE}
 sleep 10
 
 # delete subnets
@@ -60,8 +60,6 @@ sleep 10
 # delete your VPC
 echo "Delete VPC" | tee -a ${LOGFILE}
 aws ec2 delete-vpc ${PREAMBLE} --vpc-id ${VPC_ID} | tee -a ${LOGFILE}
-
-rm ${IPS_FILE}
 
 echo "Done." | tee -a ${LOGFILE}
 

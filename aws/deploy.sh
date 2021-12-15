@@ -12,6 +12,9 @@ GIT_INSTALL="sudo yum install git -y"
 GIT_REPO="https://github.com/RebeccaGartenberg/image-based-pw"
 GIT_CLONE="git clone ${GIT_REPO}"
 
+PROJECT_DIRECTORY="image-based-pw"
+PIP_INSTALL="pip3 install -r ${PROJECT_DIRECTORY}/backend/requirements.txt"
+
 echo "Deploying Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
 echo "Running deploy.sh at ${NOW}" | tee -a ${LOGFILE}
 
@@ -26,6 +29,7 @@ do
 	ssh -i ${KEY_FILE} ${USER}@${host} ${PACKAGE_UPDATE}  | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} ${GIT_INSTALL}  | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} ${GIT_CLONE}  | tee -a ${LOGFILE}
+	ssh -i ${KEY_FILE} ${USER}@${host} ${PIP_INSTALL}  | tee -a ${LOGFILE}
 done
 
 echo "Done." | tee -a ${LOGFILE}
