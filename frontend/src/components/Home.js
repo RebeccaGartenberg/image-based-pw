@@ -5,6 +5,7 @@ import {Box, Grid, GridItem, Image, Stack, Text, Input, Button, FormControl, For
 var selectedImagesArray = [];
 var password = "";
 var code = "";
+var ip = "";
 
 // Functions
 function push_to_img_arry(imgName)
@@ -83,9 +84,9 @@ function Home() {
   const [username, setUsername] = useState("");
 
   useEffect(() => {
-    const data = fetch('http://127.0.0.1:5000/get_password_images')
+    const data = fetch('http://' + ip + ':5000/get_password_images')
     .then(response => response.json()).then(data => setAllImagesArray(data))
-    const radii = fetch('http://127.0.0.1:5000/getR')
+    const radii = fetch('http://' + ip + ':5000/getR')
     .then(response => response.json()).then(radii => setRadii(radii))
   }, []);
 
@@ -94,7 +95,7 @@ function Home() {
       return (
         <Grid templateRows='repeat(2, 1fr)' templateColumns='repeat(5, 1fr)'>
         <GridItem rowSpan={1} colSpan={1}>
-        <HomepageListItem id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
+        <HomepageListItem id={id_num} imgName = {image} imgSrc={'http://' + ip + ':5000/get_image/'+image} imgWidth={150} imgHeight={150}/>
         </GridItem>
         </Grid>
       )
@@ -102,7 +103,7 @@ function Home() {
 
     const selectedImages = selectedImagesArray.map(image => {
       var id_num = allImagesArray.indexOf(image);
-      return <PasswordImage setCounter={setCounter} counter={counter} id={id_num} imgName = {image} imgSrc={'http://127.0.0.1:5000/get_image/'+image} imgWidth={256} imgHeight={256}/>
+      return <PasswordImage setCounter={setCounter} counter={counter} id={id_num} imgName = {image} imgSrc={'http://' + ip + ':5000/get_image/'+image} imgWidth={256} imgHeight={256}/>
     });
 
     function enterPassword(){
@@ -126,7 +127,7 @@ function Home() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: username, radial_distance: radii['R'][rIndex], password: password.slice(0, -2) })
       };
-      const data = fetch('http://127.0.0.1:5000/signup', requestOptions)
+      const data = fetch('http://' + ip + ':5000/signup', requestOptions)
             .then(response => {
                 code = response.status;
 
