@@ -11,7 +11,7 @@ echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
 
 for host in ${INSTANCES_IPS}
 do
-    scp -i ${KEY_FILE} ${USER}@${host}:${DATABASE_FILE} "~/Desktop/db.sqlite" | tee -a ${LOGFILE}
+    scp -i ${KEY_FILE} ${USER}@${host}:${DATABASE_FILE} "~/Desktop/" | tee -a ${LOGFILE}
 done
 
 echo "Removing Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
