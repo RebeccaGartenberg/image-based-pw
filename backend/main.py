@@ -98,7 +98,10 @@ def signup():
     if user:
         radial_distance_password = Passwords.query.filter_by(id=user.id, r=radial_distance).first()
         if radial_distance_password:
-            return jsonify("User already has a password for this radial distance, pick a new username"), 400
+            return jsonify("User already has a password for this radial distance, pick a new username"), 403
+
+    if password == "":
+        return jsonify("Please enter a password at least 6 points long"), 400
 
     # Password formatting
     password = password.split(";")
@@ -190,8 +193,6 @@ def signup():
 
 
 """
-
-
 @main.route("/login", methods=["POST"])
 def login():
     body = request.json
@@ -222,6 +223,9 @@ def login():
             return jsonify("User does not have password setup for provided radial distance"), 400
     else:
         return jsonify("User has not set up an account"), 400
+
+    if password == "":
+        return jsonify("Please enter a password at least 6 points long"), 400
 
     # Password formatting
     password = password.split(",")
