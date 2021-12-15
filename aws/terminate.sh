@@ -6,6 +6,14 @@ source ./aws/load_config.sh
 NOW=$(date '+%Y%m%d%H%M%S')
 LOGFILE="./logs/cleanup-${NOW}.log"
 
+INSTANCES_IPS=$(aws ec2 describe-instances ${PREAMBLE} --filters Name=instance-state-name,Values=running Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text | tr -s '\t' ' ')
+echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
+
+for host in ${INSTANCES_IPS}
+do
+    scp -i ${KEY_FILE} ${USER}@${host}:${DATABASE_FILE} "~/Desktop/db.sqlite" | tee -a ${LOGFILE}
+done
+
 echo "Removing Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
 echo "Running cleanup.sh at ${NOW}" | tee -a ${LOGFILE}
 

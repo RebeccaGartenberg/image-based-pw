@@ -9,11 +9,11 @@ LOGFILE="./logs/run-${NOW}.log"
 PROJECT_DIRECTORY="image-based-pw"
 
 EXPORT_FLASK="export FLASK_APP=backend"
-FLASK_RUN="flask run --host 0.0.0.0"
+FLASK_RUN="python3 -m flask run --host 0.0.0.0"
 
 NPM_START="npm start"
 
-ENTER_BACKEND="cd ~/${PROJECT_DIRECTORY}/backend/"
+ENTER_PROJECT="cd ~/${PROJECT_DIRECTORY}/"
 ENTER_FRONTEND="cd ~/${PROJECT_DIRECTORY}/frontend/"
 
 echo "Running Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
@@ -25,8 +25,8 @@ echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
 
 for host in ${INSTANCES_IPS}
 do
-    ssh -i ${KEY_FILE} ${USER}@${host} "${ENTER_BACKEND} && ${EXPORT_FLASK} && ${FLASK_RUN} &"  | tee -a ${LOGFILE}
-    ssh -i ${KEY_FILE} ${USER}@${host} "${ENTER_FRONTEND} && ${NPM_START} &"  | tee -a ${LOGFILE}
+    echo "(${ENTER_PROJECT} && ${EXPORT_FLASK} && ${FLASK_RUN} &) && (${ENTER_FRONTEND} && ${NPM_START} &)"
+    ssh -i ${KEY_FILE} ${USER}@${host} "(${ENTER_PROJECT} && ${EXPORT_FLASK} && ${FLASK_RUN} &) && (${ENTER_FRONTEND} && ${NPM_START} &)"  | tee -a ${LOGFILE}
 done
 
 echo "Done." | tee -a ${LOGFILE}
