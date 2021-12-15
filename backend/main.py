@@ -70,8 +70,6 @@ def get_radial_distances():
 
 
 """
-
-
 @main.route("/signup", methods=["POST"])
 def signup():
     body = request.json
