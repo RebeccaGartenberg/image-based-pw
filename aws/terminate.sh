@@ -16,7 +16,7 @@ sleep 30
 
 echo "Delete Key pair" | tee -a ${LOGFILE}
 aws ec2 ${PREAMBLE} delete-key-pair --key-name ${KEY_NAME}
-rm ${KEY_FILE}
+printf "yes\n" | rm ${KEY_FILE}
 
 # remove route table association
 echo "Remove route table association" | tee -a ${LOGFILE}

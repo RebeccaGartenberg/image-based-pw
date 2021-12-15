@@ -15,6 +15,8 @@ GIT_CLONE="git clone ${GIT_REPO}"
 PROJECT_DIRECTORY="image-based-pw"
 PIP_INSTALL="pip3 install -r ${PROJECT_DIRECTORY}/requirements.txt"
 
+DOWNLOAD_NPM="curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
+
 echo "Deploying Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
 echo "Running deploy.sh at ${NOW}" | tee -a ${LOGFILE}
 
