@@ -1,3 +1,5 @@
+import random
+
 from .checks import check_existence, check_bounds, get_radial_distance, get_midpoint
 from .models import users_database, User, Passwords, Attempts
 from flask_login import login_user, logout_user, current_user
@@ -42,7 +44,9 @@ def get_image(image):
 
 @main.route("/get_password_images", methods=["GET"])
 def get_password_images():
-    return jsonify(os.listdir(os.path.join(PROJECT_DIR, IMAGES_DIR))), 200
+    images = os.listdir(os.path.join(PROJECT_DIR, IMAGES_DIR))
+    random.shuffle(images)
+    return jsonify(images), 200
 
 
 @main.route("/getR", methods=["GET"])
@@ -103,11 +107,11 @@ def signup():
 
     # Password formatting
     password = password.split(";")
-    if len(password) != 2:
-        return jsonify("Incorrect format"), 400
-
     if any(subpassword == "" for subpassword in password):
         return jsonify(F"Please enter a password at least {MINIMUM_POINTS} points long"), 400
+
+    if len(password) != 2:
+        return jsonify("Incorrect format"), 400
 
     for entry, string in enumerate(password):
         points = string.split(",")
