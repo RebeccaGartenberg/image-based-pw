@@ -16,7 +16,7 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 main = Blueprint("main", __name__)
 
 MINIMUM_POINTS = 6
-RADIAL_DISTANCES = [5, 10, 15, 20, 30]
+RADIAL_DISTANCES = [3, 5, 10, 15, 20]
 
 
 @main.route("/ping", methods=["GET"])
