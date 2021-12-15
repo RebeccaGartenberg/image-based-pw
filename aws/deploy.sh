@@ -13,7 +13,7 @@ GIT_REPO="https://github.com/RebeccaGartenberg/image-based-pw"
 GIT_CLONE="git clone ${GIT_REPO}"
 
 PROJECT_DIRECTORY="image-based-pw"
-PIP_INSTALL="pip3 install -r ${PROJECT_DIRECTORY}/backend/requirements.txt"
+PIP_INSTALL="pip3 install -r ${PROJECT_DIRECTORY}/requirements.txt"
 
 echo "Deploying Full AWS infrastructure for ${APP_TAG_NAME}: ${APP_TAG_VALUE}" | tee ${LOGFILE}
 echo "Running deploy.sh at ${NOW}" | tee -a ${LOGFILE}

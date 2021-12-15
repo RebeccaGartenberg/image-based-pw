@@ -47,7 +47,7 @@ def get_password_images():
 
 @main.route("/getR", methods=["GET"])
 def get_radial_distances():
-    return jsonify({"R": sample(RADIAL_DISTANCES, 2)}), 200
+    return jsonify({"R": sorted(sample(RADIAL_DISTANCES, 2), reverse=True)}), 200
 
 
 """
