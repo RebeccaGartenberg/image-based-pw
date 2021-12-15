@@ -155,7 +155,7 @@ function Home() {
                 else if (code == 403)
                 {
                   password = "";
-                  alert(data + "\nEnter a new password")
+                  alert("Username is already taken" + "\nEnter a new username and password")
                   setPasswordTriedOnce(false);
                   setGotPasswordCorrect(false);
                   setCounter(0);
