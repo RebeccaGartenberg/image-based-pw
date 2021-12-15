@@ -99,12 +99,15 @@ def signup():
             return jsonify("User already has a password for this radial distance, pick a new username"), 403
 
     if password == "":
-        return jsonify("Please enter a password at least 6 points long"), 400
+        return jsonify(F"Please enter a password at least {MINIMUM_POINTS} points long"), 400
 
     # Password formatting
     password = password.split(";")
     if len(password) != 2:
         return jsonify("Incorrect format"), 400
+
+    if any(subpassword == "" for subpassword in password):
+        return jsonify(F"Please enter a password at least {MINIMUM_POINTS} points long"), 400
 
     for entry, string in enumerate(password):
         points = string.split(",")
