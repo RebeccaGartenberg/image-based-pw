@@ -110,7 +110,9 @@ def signup():
     if any(subpassword == "" for subpassword in password):
         return jsonify(F"Please enter a password at least {MINIMUM_POINTS} points long"), 400
 
-    if len(password) != 2:
+    if len(password) == 1:
+        return jsonify(F"Please enter a password at least {MINIMUM_POINTS} points long"), 400
+    elif len(password) != 2:
         return jsonify("Incorrect format"), 400
 
     for entry, string in enumerate(password):
