@@ -1,0 +1,7 @@
+Creating Full AWS infrastructure for : 
+Running create_vpc.sh at 20211215001310
+VPC_ID=
+SN_ID_PUBLIC=
+SN_ID_PRIVATE=
+IGW_ID=
+RT_TABLE_ID=

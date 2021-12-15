@@ -1,0 +1,11 @@
+Removing Full AWS infrastructure for APP: PICTUREPASSWORD
+Running cleanup.sh at 20211215002128
+Terminate EC2 instances
+Delete Key pair
+Remove route table association
+Delete custom route in VPC
+Delete custom route table in VPC
+Detach IGW from VPC
+Delete IGW
+Delete public subnet
+Delete private subnet

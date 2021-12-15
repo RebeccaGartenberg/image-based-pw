@@ -1,0 +1,57 @@
+Creating Full AWS infrastructure for APP: PICTUREPASSWORD
+Running create_vpc.sh at 20211215002503
+VPC_ID=vpc-038e23617858d1050
+SN_ID_PUBLIC=subnet-073b275326b646a5f
+SN_ID_PRIVATE=subnet-03fdabf0a2a899e37
+IGW_ID=igw-09dc75f2cf7928415
+RT_TABLE_ID=rtb-053c24180630c267b
+{
+    "Return": true
+}
+{
+    "RouteTables": [
+        {
+            "Associations": [],
+            "PropagatingVgws": [],
+            "RouteTableId": "rtb-053c24180630c267b",
+            "Routes": [
+                {
+                    "DestinationCidrBlock": "10.0.0.0/16",
+                    "GatewayId": "local",
+                    "Origin": "CreateRouteTable",
+                    "State": "active"
+                },
+                {
+                    "DestinationCidrBlock": "0.0.0.0/0",
+                    "GatewayId": "igw-09dc75f2cf7928415",
+                    "Origin": "CreateRoute",
+                    "State": "active"
+                }
+            ],
+            "Tags": [
+                {
+                    "Key": "APP",
+                    "Value": "PICTUREPASSWORD"
+                },
+                {
+                    "Key": "type",
+                    "Value": "web-app"
+                }
+            ],
+            "VpcId": "vpc-038e23617858d1050",
+            "OwnerId": "052101402547"
+        }
+    ]
+}
+[
+    {
+        "ID": "subnet-03fdabf0a2a899e37",
+        "CIDR": "10.0.2.0/24"
+    },
+    {
+        "ID": "subnet-073b275326b646a5f",
+        "CIDR": "10.0.1.0/24"
+    }
+]
+ASSN_ID=rtbassoc-005bae41447511a2e
+Done Creating VPC.

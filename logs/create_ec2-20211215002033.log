@@ -1,0 +1,49 @@
+Running create_ec2.sh at 20211215002033
+Create the security group
+Set the security group for ingress from the Internet
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-0c0542aa0d0ebadd2",
+            "GroupId": "sg-0be009e2cba6919d1",
+            "GroupOwnerId": "052101402547",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIpv4": "0.0.0.0/0"
+        }
+    ]
+}
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-06f42f1cb071c7a4c",
+            "GroupId": "sg-0be009e2cba6919d1",
+            "GroupOwnerId": "052101402547",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 3000,
+            "ToPort": 3000,
+            "CidrIpv4": "0.0.0.0/0"
+        }
+    ]
+}
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-071c9690bc6fdae61",
+            "GroupId": "sg-0be009e2cba6919d1",
+            "GroupOwnerId": "052101402547",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 5000,
+            "ToPort": 5000,
+            "CidrIpv4": "0.0.0.0/0"
+        }
+    ]
+}
+Create 9 instances
