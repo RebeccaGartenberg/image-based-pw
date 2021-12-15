@@ -23,8 +23,6 @@ for host in ${INSTANCES_IPS}
 do
   	# adds host to trusted ssh hosts so that it does not wait on request
  	ssh-keyscan -H ${host} >> ~/.ssh/known_hosts | tee -a ${LOGFILE}
-	echo "Copying over ${TARG} to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
-	scp -i ${KEY_FILE} -r ${TARG} ${USER}@${host}:~/ | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} ${PACKAGE_UPDATE}  | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} ${GIT_INSTALL}  | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} ${GIT_CLONE}  | tee -a ${LOGFILE}

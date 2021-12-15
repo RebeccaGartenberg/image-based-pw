@@ -21,5 +21,3 @@ AMI_ID=ami-0ed9277fb7eb570c9
 INSTANCES_COUNT=1
 INSTANCE_TYPE=t2.medium
 USER=ec2-user
-
-TARG="./"
