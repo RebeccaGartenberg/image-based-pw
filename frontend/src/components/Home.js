@@ -79,7 +79,7 @@ function Home() {
   const [passwordTriedOnce, setPasswordTriedOnce] = useState(false)
   const [gotPasswordCorrect, setGotPasswordCorrect] = useState(false)
   const [submittedPassword, setSubmittedPassword] = useState(false)
-  const [numberOfAttempts, setNumberOfAttempts] = useState(1);
+  const [numberOfAttempts, setNumberOfAttempts] = useState(10);
   const [counter, setCounter] = useState(0);
   const [username, setUsername] = useState("");
 
@@ -148,7 +148,7 @@ function Home() {
               }
               else
               {
-                if(numberOfAttempts == 10)
+                if(numberOfAttempts == 0)
                 {
                   alert('All 10 attempts used. Choose images to make another password!');
                   reset();
@@ -165,7 +165,7 @@ function Home() {
                 {
                   password = "";
                   alert(data + "\nEnter a new password")
-                  setNumberOfAttempts(numberOfAttempts + 1);
+                  setNumberOfAttempts(numberOfAttempts - 1);
                   setPasswordTriedOnce(false);
                   setGotPasswordCorrect(false);
                   setCounter(0);
@@ -192,7 +192,7 @@ function Home() {
         setSubmittedImages(false);
         setPasswordTriedOnce(false);
         setGotPasswordCorrect(false);
-        setNumberOfAttempts(1);
+        setNumberOfAttempts(10);
         password = "";
         selectedImagesArray = [];
         setCounter(0);
@@ -204,15 +204,22 @@ function Home() {
 
       !start ?
       <Stack>
-        <Text fontSize='50px'> Welcome to our final project! </Text>
-        <Text fontSize='25px'> Things to note: </Text>
-        <Text color='blue' fontSize='20px'> - Follow the steps to choose images and create passwords based on those images </Text>
-        <Text color='blue' fontSize='20px'> - You will be asked to choose 2 images and choose points on those images as a password.</Text>
-        <Text color='blue' fontSize='20px'> - Once you replicate that password, you will be asked to repeat the process with another set of 2 images.</Text>
+
+        <Text m={10} fontSize='40px'>Image-based passwords by Rebecca Gartenberg and Mark Koszykowski </Text>
+        <Text fontSize='20px'> ECE455 Cybersecurity Fall 2021</Text>
+        <Text fontSize='30px'> Welcome to Picture-Password! </Text>
+        <Text fontSize='20px'> We are conducting a study to determine the types of passwords that people tend to choose and compare image-based passwords to typical text-based passwords. </Text>
+        <Text fontSize='20px'> Things to note: </Text>
+        <Text color='blue' fontSize='20px'> - In order to participate, click start and follow the steps to choose images and create passwords based on those images </Text>
+        <Text color='blue' fontSize='20px'> - You will be asked to choose 2 images and choose points on those images as your password.</Text>
+        <Text color='blue' fontSize='20px'> - Once you replicate the password, you will be asked to repeat the process with another set of 2 images.</Text>
         <Text color='red' fontSize='20px'>That's it!</Text>
         <Text color='blue' fontSize='20px'> - But be careful, if you can't replicate your password you will be asked to create a new password several times until
         you either get it right or run out of attempts. </Text>
         <Text color='red' fontSize='15px'> Participation in this study is voluntary. By clicking start below you are agreeing to be part of our study. </Text>
+        <Text color='red' fontSize='15px'> Our purpose is to collect data on types of passwords that people tend to choose. We appreciate if participants go through our quick demo once.</Text>
+        <Text color='red' fontSize='15px'> Estimated Time: 3-6 minutes</Text>
+
         <Button colorScheme='blue' size='md' onClick={() => setStart(true)}>Start</Button>
       </Stack>
       :
@@ -237,20 +244,20 @@ function Home() {
         </FormControl>
         </Stack>
         <Text color='red' fontSize='20px'>Number of points: {counter}</Text>
-        <Text color='red' fontSize='20px'>Number of attempts: {numberOfAttempts}</Text>
+        <Text color='red' fontSize='20px'>Number of remaining attempts: {numberOfAttempts}</Text>
         <Stack m={0} direction={['column', 'row']} spacing='24px'>
         {selectedImages}
         </Stack>
         <Button size={'50px'} colorScheme='blue' variant='solid' bottom={100} left={350} onClick={() => enterPassword()}>Enter Password</Button>
       </div>
       :
-      (numberOfAttempts <= 10 && !gotPasswordCorrect) ?
+      (numberOfAttempts > 0 && !gotPasswordCorrect) ?
       <div className="Pw">
       <Text fontSize='40px'>Reenter your password</Text>
         <Stack>
         <Text fontSize='20px'>Username: {username}</Text>
         <Text color='red' fontSize='20px'>Number of points: {counter}</Text>
-        <Text color='red' fontSize='20px'>Number of attempts: {numberOfAttempts}</Text>
+        <Text color='red' fontSize='20px'>Number of remaining attempts: {numberOfAttempts}</Text>
         </Stack>
         <Stack m={0} direction={['column', 'row']} spacing='24px'>
         {selectedImages}
