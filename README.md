@@ -23,6 +23,7 @@ To host code on AWS (must have AWS credentials):
     
     ./aws/create_ec2.sh
     ./aws/deploy.sh
+    // Edit ip address in /image-based-pw/frontend/src/components/Home.js
     ssh -i ~/.ssh/pems/ece455_FinalProject.pem ec2-user@<assigned_ip_address>
     ./aws/run.sh
 
