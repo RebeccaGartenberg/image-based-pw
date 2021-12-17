@@ -1,7 +1,8 @@
 # image-based-pw
 
 Install requirements:
-  pip3 install -r ${PROJECT_DIRECTORY}/requirements.txt
+  
+    pip3 install -r ${PROJECT_DIRECTORY}/requirements.txt
 
 Run backend locally:
 
