@@ -19,7 +19,7 @@ Run frontend locally:
     nvm install 16.13.0
     npm install react-scripts
 
-To host code on AWS (must of AWS credentials):
+To host code on AWS (must have AWS credentials):
     
     ./aws/create_ec2.sh
     ./aws/deploy.sh
