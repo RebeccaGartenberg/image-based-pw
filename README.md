@@ -1,4 +1,6 @@
-# image-based-pw
+# Picture Password
+### ECE455 - Cybersecurity
+### Rebecca Gartenberg & Mark Koszykowski
 
 Install requirements:
   
